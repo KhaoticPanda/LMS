@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import java.io.FileInputStream;
 
 public class Main extends Application {
 
@@ -17,6 +19,9 @@ public class Main extends Application {
             // Set up the window (stage)
             primaryStage.setTitle("Library Management System - Login");
             primaryStage.setScene(new Scene(root, 500, 400));
+            primaryStage.getIcons().add(new Image(new FileInputStream("resources/icons8-library-24.png")));
+
+
             primaryStage.show();
 
         } catch (Exception e) {
