@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/25"
+            fx:controller="application.BorrowBookController">
+    <children>
+        <VBox spacing="15" alignment="CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+            <children>
+                <Label text="📚 Borrow a Book" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+                <!-- Table of Available Books -->
+                <TableView fx:id="tableBooks" prefHeight="300" prefWidth="600">
+                    <columns>
+                        <TableColumn fx:id="colId" text="Book ID" prefWidth="80" />
+                        <TableColumn fx:id="colTitle" text="Title" prefWidth="180" />
+                        <TableColumn fx:id="colAuthor" text="Author" prefWidth="140" />
+                        <TableColumn fx:id="colCategory" text="Category" prefWidth="120" />
+                        <TableColumn fx:id="colCopies" text="Copies Available" prefWidth="120" />
+                    </columns>
+                </TableView>
+
+                <!-- Buttons -->
+                <HBox spacing="20" alignment="CENTER">
+                    <children>
+                        <Button fx:id="btnBorrow" text="Borrow Selected Book"
+                                onAction="#handleBorrowBook"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                        <Button fx:id="btnClose" text="Close"
+                                onAction="#handleClose"
+                                style="-fx-background-color: #F44336; -fx-text-fill: white;"/>
+                    </children>
+                </HBox>
+
+            </children>
+            <padding>
+                <Insets top="10" bottom="20" left="20" right="20" />
+            </padding>
+        </VBox>
+    </children>
+</AnchorPane>
