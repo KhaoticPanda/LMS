@@ -47,7 +47,7 @@ public class loginController {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
-        String query = "SELECT * FROM students WHERE student_id = ? AND password = ?";
+        String query = "SELECT first_name FROM students WHERE student_id = ? AND password = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
@@ -72,7 +72,7 @@ public class loginController {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
-        String query = "SELECT * FROM librarians WHERE librarian_id = ? AND password = ?";
+        String query = "SELECT name FROM librarians WHERE librarian_id = ? AND password = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
