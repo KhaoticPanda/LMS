@@ -36,12 +36,7 @@ public class loginController {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
-<<<<<<< HEAD
         String query = "SELECT first_name FROM students WHERE student_id = ? AND password = ?";
-=======
-        String query = "SELECT * FROM student WHERE student_id = ? AND password = ?";
->>>>>>> branch 'master' of https://github.com/KhaoticPanda/LMS.git
-
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
             stmt.setString(2, password);
