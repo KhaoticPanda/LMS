@@ -26,28 +26,21 @@ public class loginController {
     private Connection conn;
 
     public loginController() {
-        // Connect to your MySQL database (ensure DBConnection class is set up)
+        // Connect to MySQL
         conn = Database.getConnection();
     }
 
-    // Called when "Student Login" button is clicked
+    // ---------------------- STUDENT LOGIN ----------------------
     @FXML
     private void handleStudentLogin(ActionEvent event) {
-        loginStudent(event);
-    }
-
-    // Called when "Librarian Login" button is clicked
-    @FXML
-    private void handleLibrarianLogin(ActionEvent event) {
-        loginLibrarian(event);
-    }
-
-    // ---------------------- STUDENT LOGIN ----------------------
-    private void loginStudent(ActionEvent event) {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
+<<<<<<< HEAD
         String query = "SELECT first_name FROM students WHERE student_id = ? AND password = ?";
+=======
+        String query = "SELECT * FROM student WHERE student_id = ? AND password = ?";
+>>>>>>> branch 'master' of https://github.com/KhaoticPanda/LMS.git
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
@@ -56,8 +49,23 @@ public class loginController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Student " + id + "!");
-                loadScene("StudentDashboard.fxml", event);
+                String firstName = rs.getString("first_name"); // assuming your DB column name
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome " + firstName + "!");
+
+                // Load Student Dashboard and pass student data
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentDashboard.fxml"));
+                Parent root = loader.load();
+
+                // Pass student details to the dashboard controller
+                studentDashboardController controller = loader.getController();
+                controller.setStudentDetails(id, firstName);
+
+                // Switch scene
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Student ID or Password.");
             }
@@ -68,7 +76,8 @@ public class loginController {
     }
 
     // ---------------------- LIBRARIAN LOGIN ----------------------
-    private void loginLibrarian(ActionEvent event) {
+    @FXML
+    private void handleLibrarianLogin(ActionEvent event) {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
@@ -81,7 +90,7 @@ public class loginController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian " + id + "!");
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian!");
                 loadScene("AdminDashboard.fxml", event);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Librarian ID or Password.");
