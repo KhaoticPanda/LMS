@@ -37,7 +37,7 @@ public class adminDashBoardController {
 
     @FXML
     private void handleAuthorizeBorrow(ActionEvent event) {
-        loadPage("BorrowBook.fxml");
+        loadPage("approveBorrowReq.fxml");
     }
 
     @FXML
