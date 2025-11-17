@@ -38,16 +38,19 @@ public class adminDashBoardController {
     @FXML
     private void handleAddStudent(ActionEvent event) {
         showAlert("Add Student", "Add Student button clicked.");
+        loadPage("addStudent.fxml");
     }
 
     @FXML
     private void handleAuthorizeBorrow(ActionEvent event) {
         showAlert("Authorize Borrow Requests", "Authorize Borrow Request button clicked.");
+        loadPage("approveBorrowReq.fxml");
     }
 
     @FXML
     private void handleAddBookCopies(ActionEvent event) {
         showAlert("Add New Book Copies", "Add New Book Copy button clicked.");
+        loadPage("addBook.fxml");
     }
 
     @FXML
@@ -68,6 +71,7 @@ public class adminDashBoardController {
             showAlert("Error", "Failed to approve returned books: " + e.getMessage());
             e.printStackTrace();
         }
+        loadPage("approveReq.fxml");
     }
 
     @FXML
@@ -98,6 +102,7 @@ public class adminDashBoardController {
             showAlert("Error", "Failed to manage late fees: " + e.getMessage());
             e.printStackTrace();
         }
+        loadPage("manageFee.fxml");
     }
 
     @FXML

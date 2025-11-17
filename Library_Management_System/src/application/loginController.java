@@ -36,11 +36,7 @@ public class loginController {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
-<<<<<<< HEAD
-        String query = "SELECT first_name FROM students WHERE student_id = ? AND password = ?";
-=======
         String query = "SELECT * FROM student WHERE student_id = ? AND password = ?";
->>>>>>> branch 'master' of https://github.com/KhaoticPanda/LMS.git
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
@@ -92,6 +88,8 @@ public class loginController {
             if (rs.next()) {
                 showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian!");
                 loadScene("AdminDashboard.fxml", event);
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian " + id + "!");
+                loadScene("admin.fxml", event);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Librarian ID or Password.");
             }
