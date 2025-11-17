@@ -9,7 +9,7 @@ public class Database {
     // Update these details to match your MySQL setup
     private static final String URL = "jdbc:mysql://localhost:3306/school_db";
     private static final String USER = "root";        // your MySQL username
-    private static final String PASSWORD = "Williamson@26";        // your MySQL password (if any)
+    private static final String PASSWORD = "osman";        // your MySQL password (if any)
 
     private static Connection connection;
 

@@ -82,7 +82,7 @@ public class loginController {
 
             if (rs.next()) {
                 showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian " + id + "!");
-                loadScene("AdminDashboard.fxml", event);
+                loadScene("admin.fxml", event);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Librarian ID or Password.");
             }
