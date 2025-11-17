@@ -3,7 +3,6 @@ package application;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,49 +25,63 @@ public class loginController {
     private Connection conn;
 
     public loginController() {
-        // Connect to your MySQL database (ensure DBConnection class is set up)
+        // Connect to MySQL
         conn = Database.getConnection();
     }
 
-    // Called when "Student Login" button is clicked
+    // ---------------------- STUDENT LOGIN ----------------------
     @FXML
     private void handleStudentLogin(ActionEvent event) {
-        loginStudent(event);
-    }
+        String id = studentIdField.getText().trim();
+        String password = passwordField.getText().trim();
 
-    // Called when "Librarian Login" button is clicked
-    @FXML
-    private void handleLibrarianLogin(ActionEvent event) {
-        loginLibrarian(event);
-    }
+        int studentId;
 
-    // ---------------------- STUDENT LOGIN ----------------------
-    private void loginStudent(ActionEvent event) {
-        String id = studentIdField.getText();
-        String password = passwordField.getText();
+        try {
+            studentId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Student ID must be a number.");
+            return;
+        }
 
-        String query = "SELECT * FROM students WHERE student_id = ? AND password = ?";
+        String query = "SELECT * FROM student WHERE student_id = ? AND password = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, id);
+
+            stmt.setInt(1, studentId);        // FIXED
             stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Student " + id + "!");
-                loadScene("StudentDashboard.fxml", event);
+                String firstName = rs.getString("first_name");
+
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome " + firstName + "!");
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentDashboard.fxml"));
+                Parent root = loader.load();
+
+                studentDashboardController controller = loader.getController();
+                controller.setStudentDetails(id, firstName);
+
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Student ID or Password.");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Something went wrong while checking student login.");
         }
     }
 
+
     // ---------------------- LIBRARIAN LOGIN ----------------------
-    private void loginLibrarian(ActionEvent event) {
+    @FXML
+    private void handleLibrarianLogin(ActionEvent event) {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
@@ -81,8 +94,8 @@ public class loginController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian " + id + "!");
-                loadScene("admin.fxml", event);
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome Librarian!");
+                loadScene("AdminDashboard.fxml", event);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Librarian ID or Password.");
             }
