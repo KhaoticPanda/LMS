@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="application.BorrowedBooksController"
+            prefWidth="700" prefHeight="500">
+
+    <!-- Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #2C3E50; -fx-padding: 10;">
+            <Label text="📚 Borrowed Books" style="-fx-text-fill: white; -fx-font-size: 18;"/>
+        </HBox>
+    </top>
+
+    <!-- Center TableView -->
+    <center>
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
+            <TableView fx:id="tblBorrowedBooks" prefHeight="400" prefWidth="650">
+                <columns>
+                    <TableColumn fx:id="colBookId" text="Book ID" prefWidth="80"/>
+                    <TableColumn fx:id="colTitle" text="Title" prefWidth="180"/>
+                    <TableColumn fx:id="colAuthor" text="Author" prefWidth="150"/>
+                    <TableColumn fx:id="colBorrowDate" text="Borrow Date" prefWidth="100"/>
+                    <TableColumn fx:id="colDueDate" text="Due Date" prefWidth="100"/>
+                    <TableColumn fx:id="colReturnDate" text="Return Date" prefWidth="100"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="80"/>
+                    <TableColumn fx:id="colFine" text="Fine" prefWidth="80"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>

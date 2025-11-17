@@ -3,59 +3,54 @@ package application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.books;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-// Import your model class
-import model.books;
-
 public class AvailableBooksController {
 
-    @FXML
-    private TableView<books> tableBooks;
+    // ----------------- FXML Fields -----------------
+    @FXML private TableView<books> tableBooks;
+    @FXML private TableColumn<books, Integer> colId;
+    @FXML private TableColumn<books, String> colTitle, colAuthor, colCategory;
+    @FXML private TableColumn<books, Integer> colCopies;
+    @FXML private Button btnClose;
 
-    @FXML
-    private TableColumn<books, Integer> colId;
-
-    @FXML
-    private TableColumn<books, String> colTitle, colAuthor, colCategory;
-
-    @FXML
-    private TableColumn<books, Integer> colCopies;
-
-    @FXML
-    private Button btnClose;
-
-    // ✅ Variable to receive student ID from dashboard
+    // ----------------- Variables -----------------
     private String studentId;
 
-    // ✅ Setter to accept student ID
+    // ----------------- Setter for Student ID -----------------
     public void setStudentId(String id) {
         this.studentId = id;
         System.out.println("Student ID passed to AvailableBooksController: " + id);
+        loadAvailableBooks(); // refresh table whenever student ID is set
     }
 
+    // ----------------- Initialization -----------------
     @FXML
     private void initialize() {
+        // Set up TableView columns
         colId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         colCopies.setCellValueFactory(new PropertyValueFactory<>("copiesAvailable"));
-
-        loadAvailableBooks();
     }
 
+    // ----------------- Load Available Books -----------------
     private void loadAvailableBooks() {
         ObservableList<books> booksList = FXCollections.observableArrayList();
 
-        String query = "SELECT * FROM books WHERE status='Available'";
+        // Query to get only available books (copies > 0)
+        String query = """
+                SELECT * FROM books 
+                WHERE copies_available > 0
+                """;
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
@@ -78,6 +73,7 @@ public class AvailableBooksController {
         }
     }
 
+    // ----------------- Close Button Handler -----------------
     @FXML
     private void handleClose() {
         Stage stage = (Stage) btnClose.getScene().getWindow();

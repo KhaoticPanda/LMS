@@ -3,16 +3,16 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25"
             fx:controller="application.AvailableBooksController">
     <children>
-        <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+        <VBox spacing="15" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
             <children>
-                <TableView fx:id="tableBooks" prefHeight="400">
+                <!-- TableView to display all available books -->
+                <TableView fx:id="tableBooks" prefHeight="400" prefWidth="600">
                     <columns>
                         <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
                         <TableColumn fx:id="colTitle" text="Title" prefWidth="150"/>
@@ -21,7 +21,9 @@
                         <TableColumn fx:id="colCopies" text="Copies" prefWidth="60"/>
                     </columns>
                 </TableView>
-                <Button text="Close" onAction="#handleClose"/>
+
+                <!-- Close button -->
+                <Button fx:id="btnClose" text="Close" onAction="#handleClose" prefWidth="100"/>
             </children>
         </VBox>
     </children>

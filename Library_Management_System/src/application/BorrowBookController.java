@@ -30,6 +30,7 @@ public class BorrowBookController {
     @FXML
     private Button btnBorrow, btnClose;
 
+    // Store student ID passed from dashboard
     private String studentId;
 
     public void setStudentId(String id) {
@@ -39,19 +40,20 @@ public class BorrowBookController {
 
     @FXML
     private void initialize() {
+        // Setup TableView columns
         colId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         colTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         colAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         colCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         colCopies.setCellValueFactory(new PropertyValueFactory<>("copiesAvailable"));
 
-        loadAvailableBooks();
+        loadAvailableBooks(); // Load data initially
     }
 
     // ---------------- LOAD AVAILABLE BOOKS ----------------
     private void loadAvailableBooks() {
         ObservableList<books> booksList = FXCollections.observableArrayList();
-        String query = "SELECT * FROM books WHERE status='Available' AND copies_available > 0";
+        String query = "SELECT * FROM books WHERE copies_available > 0"; // Only show books with available copies
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
@@ -84,19 +86,20 @@ public class BorrowBookController {
             return;
         }
 
-        // Dates
         LocalDate borrowDate = LocalDate.now();
-        LocalDate dueDate = borrowDate.plusDays(14); // 2 weeks later
+        LocalDate dueDate = borrowDate.plusDays(14); // 2 weeks
 
-        // Updated SQL queries based on your DB
-        String insertQuery = "INSERT INTO borrow_records (student_id, book_id, borrow_date, due_date, status) VALUES (?, ?, ?, ?, 'Borrowed')";
-        String updateQuery = "UPDATE books SET copies_available = copies_available - 1, " +
-                             "status = CASE WHEN copies_available - 1 = 0 THEN 'Borrowed' ELSE status END " +
-                             "WHERE book_id = ?";
+        // Insert borrow record & update copies
+        String insertQuery = "INSERT INTO borrow_records (student_id, book_id, borrow_date, due_date, status) " +
+                             "VALUES (?, ?, ?, ?, 'Borrowed')";
+
+        String updateBookQuery = "UPDATE books SET copies_available = copies_available - 1, " +
+                                 "status = CASE WHEN copies_available - 1 = 0 THEN 'Borrowed' ELSE status END " +
+                                 "WHERE book_id = ?";
 
         try (Connection conn = Database.getConnection()) {
 
-            // Insert record into borrow_records
+            // Insert borrow record
             PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
             insertStmt.setString(1, studentId);
             insertStmt.setInt(2, selectedBook.getBookId());
@@ -104,17 +107,18 @@ public class BorrowBookController {
             insertStmt.setDate(4, java.sql.Date.valueOf(dueDate));
             insertStmt.executeUpdate();
 
-            // Update book copies and status
-            PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+            // Update book availability
+            PreparedStatement updateStmt = conn.prepareStatement(updateBookQuery);
             updateStmt.setInt(1, selectedBook.getBookId());
             updateStmt.executeUpdate();
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Book borrowed successfully!");
-            loadAvailableBooks(); // Refresh list
+
+            loadAvailableBooks(); // Refresh TableView
 
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Something went wrong while borrowing the book.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to borrow book. Please try again.");
         }
     }
 
