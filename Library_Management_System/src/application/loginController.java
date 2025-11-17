@@ -3,7 +3,6 @@ package application;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -33,42 +32,52 @@ public class loginController {
     // ---------------------- STUDENT LOGIN ----------------------
     @FXML
     private void handleStudentLogin(ActionEvent event) {
-        String id = studentIdField.getText();
-        String password = passwordField.getText();
+        String id = studentIdField.getText().trim();
+        String password = passwordField.getText().trim();
 
-        String query = "SELECT first_name FROM students WHERE student_id = ? AND password = ?";
+        int studentId;
+
+        try {
+            studentId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Student ID must be a number.");
+            return;
+        }
+
+        String query = "SELECT * FROM student WHERE student_id = ? AND password = ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, id);
+
+            stmt.setInt(1, studentId);        // FIXED
             stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String firstName = rs.getString("first_name"); // assuming your DB column name
+                String firstName = rs.getString("first_name");
+
                 showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome " + firstName + "!");
 
-                // Load Student Dashboard and pass student data
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentDashboard.fxml"));
                 Parent root = loader.load();
 
-                // Pass student details to the dashboard controller
                 studentDashboardController controller = loader.getController();
                 controller.setStudentDetails(id, firstName);
 
-                // Switch scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
+                stage.setScene(new Scene(root));
                 stage.show();
 
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid Student ID or Password.");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Something went wrong while checking student login.");
         }
     }
+
 
     // ---------------------- LIBRARIAN LOGIN ----------------------
     @FXML
@@ -76,7 +85,7 @@ public class loginController {
         String id = studentIdField.getText();
         String password = passwordField.getText();
 
-        String query = "SELECT name FROM librarians WHERE librarian_id = ? AND password = ?";
+        String query = "SELECT * FROM librarians WHERE librarian_id = ? AND password = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, id);
